@@ -170,6 +170,9 @@ func (item Item) AddParam() interface{} {
 	if item.Due != nil {
 		param["due"] = item.Due
 	}
+	if item.ParentID != nil {
+		param["parent_id"] = *item.ParentID
+	}
 	param["auto_reminder"] = item.AutoReminder
 
 	return param

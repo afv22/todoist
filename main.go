@@ -97,6 +97,11 @@ func main() {
 		Aliases: []string{"r"},
 		Usage:   "set reminder (only premium users)",
 	}
+	parentIDFlag := cli.StringFlag{
+		Name:    "parent-id",
+		Aliases: []string{"parent"},
+		Usage:   "parent task id (creates subtask)",
+	}
 
 	app.Flags = []cli.Flag{
 		&cli.BoolFlag{
@@ -268,6 +273,7 @@ func main() {
 				&projectNameFlag,
 				&dateFlag,
 				&reminderFlg,
+				&parentIDFlag,
 			},
 			ArgsUsage: "<Item content>",
 		},

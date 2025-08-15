@@ -36,14 +36,22 @@ func Add(c *cli.Context) error {
 		}
 		item.ProjectID = projectId
 	} else {
-		item.ProjectID = c.String("project-id")
+		if c.IsSet("project-id") {
+			item.ProjectID = c.String("project-id")
+		}
 	}
 
 	item.LabelNames = func(str string) []string {
+		if str == "" {
+			return []string{}
+		}
 		stringNames := strings.Split(str, ",")
 		names := []string{}
 		for _, stringName := range stringNames {
-			names = append(names, stringName)
+			trimmed := strings.TrimSpace(stringName)
+			if trimmed != "" {
+				names = append(names, trimmed)
+			}
 		}
 		return names
 	}(c.String("label-names"))
@@ -51,6 +59,11 @@ func Add(c *cli.Context) error {
 	item.Due = &todoist.Due{String: c.String("date")}
 
 	item.AutoReminder = c.Bool("reminder")
+
+	parentID := c.String("parent-id")
+	if parentID != "" {
+		item.ParentID = &parentID
+	}
 
 	if err := client.AddItem(context.Background(), item); err != nil {
 		return err
